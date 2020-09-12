@@ -1,0 +1,1 @@
+http://reversi.surge.sh/#/

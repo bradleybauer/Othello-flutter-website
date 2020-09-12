@@ -1,0 +1,20 @@
+
+include: package:effective_dart/analysis_options.yaml
+
+linter:
+  rules:
+    file_names: false
+    - ignore_file_names
+    - unnecessary_const
+    - prefer_const_literals_to_create_immutables
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - annotate_overrides
+    - await_only_futures
+    - camel_case_types
+    - cancel_subscriptions
+    - close_sinks
+    - comment_references
+    - constant_identifier_names
+    - control_flow_in_finally
+    - empty_statements
