@@ -8,12 +8,12 @@ import '../Game/Othello.dart';
 
 class QValuePlot extends StatelessWidget {
   const QValuePlot(
-      {@required this.brickEdgeLength,
-      @required this.height,
-      @required this.width,
-      @required this.borderColor,
-      @required this.game,
-      @required this.player,
+      {required this.brickEdgeLength,
+      required this.height,
+      required this.width,
+      required this.borderColor,
+      required this.game,
+      required this.player,
       this.mirror = 1});
   final int mirror;
   final double brickEdgeLength;
@@ -38,23 +38,27 @@ class QValuePlot extends StatelessWidget {
       child: CustomPaint(
         willChange: false,
         size: Size(width, height),
-        painter: QValuePlotPainter(brickEdgeLength: brickEdgeLength, qvalues: game.getQValues(player), mirror: mirror),
+        painter: QValuePlotPainter(
+            brickEdgeLength: brickEdgeLength,
+            qvalues: game.getQValues(player),
+            mirror: mirror),
       ),
     );
   }
 }
 
 class QValuePlotPainter extends CustomPainter {
-  const QValuePlotPainter({this.brickEdgeLength, this.qvalues, this.mirror = 1});
+  const QValuePlotPainter(
+      {required this.brickEdgeLength, required this.qvalues, this.mirror = 1});
   final int mirror;
   final double brickEdgeLength;
-  final List<double> qvalues;
+  final List<double?> qvalues;
 
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..isAntiAlias = true
-      ..color = Colors.grey[700]
+      ..color = Colors.grey[700]!
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
       ..strokeWidth = brickEdgeLength / 16;
@@ -63,10 +67,14 @@ class QValuePlotPainter extends CustomPainter {
         // handle case where there is no action taken
         continue;
       }
-      var p0 = Offset((i + .5) / Othello.MAX_NUM_TURNS, 1 - (qvalues[i] - 10 + .0333 * i * i) / 65);
-      var p1 = Offset((i + 1.5) / Othello.MAX_NUM_TURNS, 1 - (qvalues[i + 1] - 10 + .0333 * (i + 1) * (i + 1)) / 65);
-      p0 = Offset(math.min(1, math.max(0, p0.dx)), math.min(1, math.max(0, p0.dy)));
-      p1 = Offset(math.min(1, math.max(0, p1.dx)), math.min(1, math.max(0, p1.dy)));
+      var p0 = Offset((i + .5) / Othello.MAX_NUM_TURNS,
+          1 - (qvalues[i]! - 10 + .0333 * i * i) / 65);
+      var p1 = Offset((i + 1.5) / Othello.MAX_NUM_TURNS,
+          1 - (qvalues[i + 1]! - 10 + .0333 * (i + 1) * (i + 1)) / 65);
+      p0 = Offset(
+          math.min(1, math.max(0, p0.dx)), math.min(1, math.max(0, p0.dy)));
+      p1 = Offset(
+          math.min(1, math.max(0, p1.dx)), math.min(1, math.max(0, p1.dy)));
       p0 = Offset(mirror * (p0.dx - .5) * .9 + .5, (p0.dy - .5) * .75 + .5);
       p1 = Offset(mirror * (p1.dx - .5) * .9 + .5, (p1.dy - .5) * .75 + .5);
       p0 = p0.scale(size.width, size.height);

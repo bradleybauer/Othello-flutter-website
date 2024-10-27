@@ -3,14 +3,17 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class AnimatedBackground extends StatefulWidget {
-  AnimatedBackground({this.screenWidth, this.screenHeight, this.brickEdgeLength})
+  AnimatedBackground(
+      {required this.screenWidth,
+      required this.screenHeight,
+      required this.brickEdgeLength})
       : background = Container(
           height: screenHeight,
           width: screenWidth,
           decoration: BoxDecoration(
               color: Colors.white,
               gradient: LinearGradient(
-                colors: [Colors.white, Colors.blueGrey[50]],
+                colors: [Colors.white, Colors.blueGrey[50]!],
                 transform: GradientRotation(math.pi / 4),
               )),
         ),
@@ -29,8 +32,9 @@ class AnimatedBackground extends StatefulWidget {
   _AnimatedBackground createState() => _AnimatedBackground();
 }
 
-class _AnimatedBackground extends State<AnimatedBackground> with TickerProviderStateMixin {
-  AnimationController _controller;
+class _AnimatedBackground extends State<AnimatedBackground>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
 //  static const dt = 1 / 720; // 360
   static const dt = 1 / 4000; // 360
   static const double mass = .2;
@@ -86,9 +90,9 @@ class _AnimatedBackground extends State<AnimatedBackground> with TickerProviderS
 
 //  static const bool periodicForces = false;
 
-  List<Offset> points;
-  List<Offset> velocities;
-  List<double> masses;
+  List<Offset> points = [];
+  List<Offset> velocities = [];
+  List<double> masses = [];
 
   Widget makeObj(mass, x, y) {
     final double ballSize = widget.brickEdgeLength / 4 * 3;
@@ -100,7 +104,9 @@ class _AnimatedBackground extends State<AnimatedBackground> with TickerProviderS
         height: ballSize,
         width: ballSize,
         decoration: BoxDecoration(
-            color: Colors.grey[200], borderRadius: BorderRadius.all(Radius.circular(widget.brickEdgeLength / 4))));
+            color: Colors.grey[200],
+            borderRadius:
+                BorderRadius.all(Radius.circular(widget.brickEdgeLength / 4))));
   }
 
   void simulate() {
@@ -113,24 +119,28 @@ class _AnimatedBackground extends State<AnimatedBackground> with TickerProviderS
         if (j == i) continue;
         for (int m = -1; m <= 1; m++) {
           for (int n = -1; n <= 1; n++) {
-            Offset dir = Offset(points[j].dx - points[i].dx + m * widget.worldWidth,
+            Offset dir = Offset(
+                points[j].dx - points[i].dx + m * widget.worldWidth,
                 points[j].dy - points[i].dy + n * 2 * widget.worldHeight);
             double distance = dir.distance;
             if (distance <
                 eps *
                     ballSize /
-                    math.sqrt(widget.screenWidth * widget.screenWidth + widget.screenHeight * widget.screenHeight)) {
+                    math.sqrt(widget.screenWidth * widget.screenWidth +
+                        widget.screenHeight * widget.screenHeight)) {
               distance = eps *
                   ballSize /
-                  math.sqrt(widget.screenWidth * widget.screenWidth + widget.screenHeight * widget.screenHeight);
+                  math.sqrt(widget.screenWidth * widget.screenWidth +
+                      widget.screenHeight * widget.screenHeight);
             }
             double force = G * mass * mass / (distance * distance);
 //            if (m == 0 && n == 0) {
 //              penergy += .25 * force * distance;
 //              kenergy += mass * velocities[i].distanceSquared;
 //            }
-            velocities[i] = velocities[i]
-                .translate(force / mass * dt * (dir.dx / distance), force / mass * dt * (dir.dy / distance));
+            velocities[i] = velocities[i].translate(
+                force / mass * dt * (dir.dx / distance),
+                force / mass * dt * (dir.dy / distance));
 //        double force = G * masses[i] * masses[j] / (distance * distance);
 //        velocities[i] = velocities[i]
 //            .translate(force / masses[i] * dt * (dir.dx / distance), force / masses[i] * dt * (dir.dy / distance));
@@ -141,7 +151,8 @@ class _AnimatedBackground extends State<AnimatedBackground> with TickerProviderS
 //    print([penergy, kenergy]);
 //    print(penergy + kenergy);
     for (int i = 0; i < N; i++) {
-      points[i] = points[i].translate(velocities[i].dx * dt, velocities[i].dy * dt);
+      points[i] =
+          points[i].translate(velocities[i].dx * dt, velocities[i].dy * dt);
 
       if (points[i].dy > widget.worldHeight) {
         points[i] = Offset(points[i].dx, points[i].dy - widget.worldHeight * 2);
@@ -161,15 +172,16 @@ class _AnimatedBackground extends State<AnimatedBackground> with TickerProviderS
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(seconds: 1), vsync: this)
-      ..repeat()
-      ..addListener(() {
-        setState(simulate);
-      });
+    _controller =
+        AnimationController(duration: const Duration(seconds: 1), vsync: this)
+          ..repeat()
+          ..addListener(() {
+            setState(simulate);
+          });
 
     math.Random r = math.Random(4141);
-    points = List<Offset>();
-    velocities = List<Offset>();
+    points = <Offset>[];
+    velocities = <Offset>[];
 //    masses = List<double>();
     for (int i = 0; i < N; i++) {
       points.add(Offset((2 * r.nextDouble() - 1), (2 * r.nextDouble() - 1)));
@@ -197,12 +209,15 @@ class _AnimatedBackground extends State<AnimatedBackground> with TickerProviderS
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> animatedParticles = List<Widget>();
+    List<Widget> animatedParticles = <Widget>[];
     for (int i = 0; i < N; i++) {
       animatedParticles.add(AnimatedBuilder(
         animation: _controller.view,
-        builder: (context, _) => makeObj(mass, (points[i].dx / widget.worldWidth + .5) * widget.screenWidth,
-            (points[i].dy / widget.worldHeight * .5 + .5) * widget.screenHeight),
+        builder: (context, _) => makeObj(
+            mass,
+            (points[i].dx / widget.worldWidth + .5) * widget.screenWidth,
+            (points[i].dy / widget.worldHeight * .5 + .5) *
+                widget.screenHeight),
       ));
     }
     return Stack(children: <Widget>[widget.background] + animatedParticles);

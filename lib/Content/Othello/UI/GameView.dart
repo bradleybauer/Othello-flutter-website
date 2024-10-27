@@ -12,7 +12,7 @@ import 'HudView.dart';
 import 'MenuPage.dart';
 
 class GameView extends StatefulWidget {
-  GameView({@required this.screenWidth, @required this.screenHeight});
+  GameView({required this.screenWidth, required this.screenHeight});
 
   final double screenWidth;
   final double screenHeight;
@@ -70,7 +70,10 @@ class _GameViewState extends State<GameView> {
                         inGame2MenuTransition = true;
                       });
                     }))),
-        BoardView(game: session.game, brickEdgeLength: brickEdgeLength, brickDiagonalRadius: brickDiagonalRadius),
+        BoardView(
+            game: session.game!,
+            brickEdgeLength: brickEdgeLength,
+            brickDiagonalRadius: brickDiagonalRadius),
         MenuPage(
             showMenu: inGame2MenuTransition,
             screenWidth: screenWidth,
@@ -88,6 +91,6 @@ class _GameViewState extends State<GameView> {
             })
       ]);
     }
-    return null;
+    return Stack();
   }
 }

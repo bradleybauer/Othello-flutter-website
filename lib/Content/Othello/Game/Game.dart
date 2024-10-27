@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 
 import '../../MyUtil.dart';
 import '../Player/IPlayer.dart';
-import '../QFunction/QFunctionFake.dart' if (dart.library.js) '../QFunction/QFunctionWeb.dart';
+import '../QFunction/QFunctionFake.dart'
+    if (dart.library.js) '../QFunction/QFunctionWeb.dart';
 import 'GameOptions.dart';
 import 'Othello.dart';
 
@@ -24,7 +25,7 @@ class Game extends ChangeNotifier {
     });
   }
 
-  bool showHints;
+  bool showHints = false;
 
   void startGame() {
     assert(!hasGameBeenStarted());
@@ -39,17 +40,18 @@ class Game extends ChangeNotifier {
   final IPlayer player2;
 
   final qFunction = QFunction();
-  final whiteQValues = <double>[];
-  final blackQValues = <double>[];
+  final whiteQValues = <double?>[];
+  final blackQValues = <double?>[];
 
   final othello = Othello();
 
   bool gameFinished = false;
   bool get playersAreReady => player1.isReady() && player2.isReady();
 
-  List<List<int>> previousBoard;
+  List<List<int>> previousBoard = <List<int>>[];
   List<List<int>> get board => othello.board;
-  List<List<int>> get availableActions => othello.getLegalActions(othello.player);
+  List<List<int>> get availableActions =>
+      othello.getLegalActions(othello.player);
 
   List<List<int>> getPlacements() {
     List<List<int>> placements = <List<int>>[];
@@ -94,7 +96,9 @@ class Game extends ChangeNotifier {
   void _takeTurn(List<int> action) {
     assert(action != null);
 
-    if (gameFinished || !playersAreReady || !containsList(availableActions, action)) {
+    if (gameFinished ||
+        !playersAreReady ||
+        !containsList(availableActions, action)) {
       return;
     }
 
@@ -107,9 +111,11 @@ class Game extends ChangeNotifier {
       // tell next player to get an action
       if (availableActions.length > 0) {
         if (player1.getId() == othello.player) {
-          player1.getAction(board, availableActions, (action) => _takeTurn(action));
+          player1.getAction(
+              board, availableActions, (action) => _takeTurn(action));
         } else {
-          player2.getAction(board, availableActions, (action) => _takeTurn(action));
+          player2.getAction(
+              board, availableActions, (action) => _takeTurn(action));
         }
       } else {
         // No action available so schedule a repaint to move the game forward
@@ -127,7 +133,7 @@ class Game extends ChangeNotifier {
       othello.blackPlayerNumPieces != Othello.NUM_STARTING_PIECES - 2 ||
       othello.whitePlayerNumPieces != Othello.NUM_STARTING_PIECES - 2;
 
-  List<double> getQValues(int player) {
+  List<double?> getQValues(int player) {
     if (player == Othello.WHITE) {
       return whiteQValues;
     } else {

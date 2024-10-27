@@ -9,11 +9,11 @@ class Othello {
   static const MAX_NUM_TURNS = 30;
   static const NOOP_ACTION = [-1, -1];
 
-  int player;
-  List<List<int>> board;
-  bool previousPlayerSkipped;
-  int blackPlayerNumPieces;
-  int whitePlayerNumPieces;
+  int player = 0;
+  List<List<int>> board = <List<int>>[];
+  bool previousPlayerSkipped = false;
+  int blackPlayerNumPieces = 0;
+  int whitePlayerNumPieces = 0;
 
   Othello() {
     reset();
@@ -37,11 +37,11 @@ class Othello {
   }
 
   List<List<int>> getEmptyBoard() {
-    var board = List<List<int>>(BOARD_SIZE);
+    var board = <List<int>>[];
     for (int i = 0; i < BOARD_SIZE; i++) {
-      board[i] = List<int>(BOARD_SIZE);
+      board.add(<int>[]);
       for (int k = 0; k < BOARD_SIZE; k++) {
-        board[i][k] = 0;
+        board[i].add(0);
       }
     }
     return board;
@@ -59,7 +59,8 @@ class Othello {
   int getScore(whichPlayer) {
     int score = 0;
     for (int i = 0; i < BOARD_SIZE; i++)
-      for (int j = 0; j < BOARD_SIZE; j++) if (board[i][j] == whichPlayer) score += 1;
+      for (int j = 0; j < BOARD_SIZE; j++)
+        if (board[i][j] == whichPlayer) score += 1;
     return score;
   }
 

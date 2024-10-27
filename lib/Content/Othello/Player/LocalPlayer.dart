@@ -5,16 +5,17 @@ class LocalPlayer extends IPlayer {
   final int id;
   LocalPlayer(this.id);
 
-  Function _callback;
+  Function _callback = () {};
 
   @override
   void setup(Function callback) {
 //    sleep(3, callback);
-  callback();
+    callback();
   }
 
   @override
-  void getAction(List<List<int>> board, List<List<int>> validPositions, Function callback) {
+  void getAction(List<List<int>> board, List<List<int>> validPositions,
+      Function callback) {
     // local players interact with the view to get an action
     _callback = (List<int> action) {
       if (containsList(validPositions, action)) {

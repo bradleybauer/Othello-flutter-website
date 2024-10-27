@@ -3,7 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class Brick extends StatelessWidget {
-  const Brick(this.highlight, this.brickEdgeLength, this.brickDiagonalRadius, this.i, this.j, this.offset, this.onTap);
+  const Brick(this.highlight, this.brickEdgeLength, this.brickDiagonalRadius,
+      this.i, this.j, this.offset, this.onTap);
 
   final int i;
   final int j;
@@ -15,8 +16,8 @@ class Brick extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = highlight ? Colors.blueGrey[200] : Colors.grey[200];
-    final Color shade = Colors.grey[300];
+    final Color color = highlight ? Colors.blueGrey[200]! : Colors.grey[200]!;
+    final Color shade = Colors.grey[300]!;
     final Color borderColor = Colors.blueGrey;
     final Color hoverColor = Colors.pinkAccent;
 
@@ -25,18 +26,28 @@ class Brick extends StatelessWidget {
     final double borderSize1 = brickEdgeLength / 15;
     final double borderSize2 = brickEdgeLength / 40;
     final border = Border(
-      top: BorderSide(color: (i == 0) ? Colors.pink : borderColor, width: (i == 0) ? borderSize1 : borderSize2),
-      bottom: BorderSide(color: (i == 7) ? Colors.pink : borderColor, width: (i == 7) ? borderSize1 : borderSize2),
-      left: BorderSide(color: (j == 7) ? Colors.pink : borderColor, width: (j == 7) ? borderSize1 : borderSize2),
-      right: BorderSide(color: (j == 0) ? Colors.pink : borderColor, width: (j == 0) ? borderSize1 : borderSize2),
+      top: BorderSide(
+          color: (i == 0) ? Colors.pink : borderColor,
+          width: (i == 0) ? borderSize1 : borderSize2),
+      bottom: BorderSide(
+          color: (i == 7) ? Colors.pink : borderColor,
+          width: (i == 7) ? borderSize1 : borderSize2),
+      left: BorderSide(
+          color: (j == 7) ? Colors.pink : borderColor,
+          width: (j == 7) ? borderSize1 : borderSize2),
+      right: BorderSide(
+          color: (j == 0) ? Colors.pink : borderColor,
+          width: (j == 0) ? borderSize1 : borderSize2),
     );
 
     final double adjust = brickEdgeLength / 16;
 
     return Transform(
-      origin: Offset((brickEdgeLength + zHeight) / 2, (brickEdgeLength + zHeight) / 2),
+      origin: Offset(
+          (brickEdgeLength + zHeight) / 2, (brickEdgeLength + zHeight) / 2),
       transform: Matrix4.translationValues(offset.dx, offset.dy + adjust, 0) *
-          Matrix4.diagonal3Values(-1 / math.sqrt(2), verticalScale / math.sqrt(2), 1) *
+          Matrix4.diagonal3Values(
+              -1 / math.sqrt(2), verticalScale / math.sqrt(2), 1) *
           Matrix4.rotationZ(math.pi / 4),
       child: Container(
         height: brickEdgeLength + zHeight,
@@ -51,7 +62,10 @@ class Brick extends StatelessWidget {
                   decoration: BoxDecoration(border: border),
                   child: Material(
                     color: color,
-                    child: InkWell(onTap: onTap, canRequestFocus: false, hoverColor: hoverColor),
+                    child: InkWell(
+                        onTap: onTap,
+                        canRequestFocus: false,
+                        hoverColor: hoverColor),
                   ),
                 ),
                 Container(

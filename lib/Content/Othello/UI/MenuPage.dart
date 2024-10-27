@@ -2,15 +2,18 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 
 import '../Game/GameOptions.dart';
 import '../Game/Othello.dart';
 import '../Player/PlayerType.dart';
 
 class Curtain extends StatelessWidget {
-  Curtain({this.open, this.screenWidth, this.screenHeight, this.child, this.callback});
+  Curtain(
+      {required this.open,
+      required this.screenWidth,
+      required this.screenHeight,
+      required this.child,
+      required this.callback});
 
   final bool open;
   final double screenWidth;
@@ -49,8 +52,10 @@ class Curtain extends StatelessWidget {
               child: OverflowBox(
                 maxHeight: screenHeight * 1.1,
                 maxWidth: screenWidth,
-                child:
-                    Column(mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.end, children: edge),
+                child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: edge),
               ),
             ),
           ),
@@ -69,26 +74,26 @@ class Curtain extends StatelessWidget {
 
 class MenuPage extends StatefulWidget {
   MenuPage(
-      {this.screenWidth,
-      this.screenHeight,
-      this.brickEdgeLength,
-      this.dismissCallback,
+      {required this.screenWidth,
+      required this.screenHeight,
+      required this.brickEdgeLength,
+      required this.dismissCallback,
       this.animationDoneCallback,
-      this.showMenu});
+      required this.showMenu});
 
   final bool showMenu;
   final double screenWidth;
   final double screenHeight;
   final double brickEdgeLength;
   final Null Function(GameOptions) dismissCallback;
-  final Null Function() animationDoneCallback;
+  final Null Function()? animationDoneCallback;
 
   @override
   _MenuPageState createState() => _MenuPageState();
 }
 
 class _MenuPageState extends State<MenuPage> {
-  GameOptions options;
+  late GameOptions options;
 
   bool showHintsHover = false;
 
@@ -111,9 +116,12 @@ class _MenuPageState extends State<MenuPage> {
         open: !widget.showMenu,
         screenWidth: widget.screenWidth,
         screenHeight: widget.screenHeight,
-        callback: widget.animationDoneCallback,
+        callback: widget.animationDoneCallback ?? () {},
         child: DefaultTextStyle(
-          style: TextStyle(color: Colors.white, fontSize: widget.brickEdgeLength / 2, fontFamily: 'Nintendo'),
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: widget.brickEdgeLength / 2,
+              fontFamily: 'Nintendo'),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -121,15 +129,21 @@ class _MenuPageState extends State<MenuPage> {
                 Spacer(flex: 3),
                 Text(
                   'R E V E R S I',
-                  style: TextStyle(fontSize: widget.brickEdgeLength * .75, fontFamily: 'Nintendo', color: Colors.white),
+                  style: TextStyle(
+                      fontSize: widget.brickEdgeLength * .75,
+                      fontFamily: 'Nintendo',
+                      color: Colors.white),
                 ),
                 Transform(
-                  origin: Offset(widget.brickEdgeLength * .75 * 7 / 1.426, widget.brickEdgeLength / 2),
+                  origin: Offset(widget.brickEdgeLength * .75 * 7 / 1.426,
+                      widget.brickEdgeLength / 2),
                   transform: Matrix4.rotationZ(math.pi),
                   child: Text(
                     'R E V E R S I',
                     style: TextStyle(
-                        fontSize: widget.brickEdgeLength * .75, fontFamily: 'Nintendo', color: Colors.grey[800]),
+                        fontSize: widget.brickEdgeLength * .75,
+                        fontFamily: 'Nintendo',
+                        color: Colors.grey[800]),
                   ),
                 ),
                 Spacer(flex: 3),
@@ -139,11 +153,14 @@ class _MenuPageState extends State<MenuPage> {
                   SwitchText(
                       firstText: 'HUMAN',
                       secondText: 'AI',
-                      initialValue: options.player1Options.playerType == PlayerType.LOCAL,
+                      initialValue:
+                          options.player1Options.playerType == PlayerType.LOCAL,
                       brickEdgeLength: widget.brickEdgeLength,
                       onSwitch: (bool firstSelected) {
                         setState(() {
-                          options.player1Options.playerType = firstSelected ? PlayerType.LOCAL : PlayerType.LOCAL_AI;
+                          options.player1Options.playerType = firstSelected
+                              ? PlayerType.LOCAL
+                              : PlayerType.LOCAL_AI;
                         });
                       }),
                 ]),
@@ -154,11 +171,14 @@ class _MenuPageState extends State<MenuPage> {
                   SwitchText(
                       firstText: 'HUMAN',
                       secondText: 'AI',
-                      initialValue: options.player2Options.playerType == PlayerType.LOCAL,
+                      initialValue:
+                          options.player2Options.playerType == PlayerType.LOCAL,
                       brickEdgeLength: widget.brickEdgeLength,
                       onSwitch: (bool firstSelected) {
                         setState(() {
-                          options.player2Options.playerType = firstSelected ? PlayerType.LOCAL : PlayerType.LOCAL_AI;
+                          options.player2Options.playerType = firstSelected
+                              ? PlayerType.LOCAL
+                              : PlayerType.LOCAL_AI;
                         });
                       }),
                 ]),
@@ -194,7 +214,12 @@ class _MenuPageState extends State<MenuPage> {
 }
 
 class SwitchText extends StatefulWidget {
-  SwitchText({this.firstText, this.secondText, this.onSwitch, this.brickEdgeLength, this.initialValue});
+  SwitchText(
+      {required this.firstText,
+      required this.secondText,
+      required this.onSwitch,
+      required this.brickEdgeLength,
+      required this.initialValue});
 
   final bool initialValue;
   final String firstText;
@@ -207,9 +232,9 @@ class SwitchText extends StatefulWidget {
 }
 
 class _SwitchTextState extends State<SwitchText> {
-  bool firstSelected;
-  bool hoverFirst;
-  bool hoverSecond;
+  bool firstSelected = false;
+  bool hoverFirst = false;
+  bool hoverSecond = false;
 
   @override
   void initState() {
@@ -221,7 +246,9 @@ class _SwitchTextState extends State<SwitchText> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: widget.brickEdgeLength / 8, horizontal: widget.brickEdgeLength / 4),
+      padding: EdgeInsets.symmetric(
+          vertical: widget.brickEdgeLength / 8,
+          horizontal: widget.brickEdgeLength / 4),
       child: Row(
         children: [
           InkWell(
@@ -240,7 +267,9 @@ class _SwitchTextState extends State<SwitchText> {
                 style: TextStyle(
                     color: hoverFirst
                         ? Color.fromARGB(255, 181, 235, 242)
-                        : firstSelected ? Colors.red : Colors.grey[800])),
+                        : firstSelected
+                            ? Colors.red
+                            : Colors.grey[800])),
           ),
           SizedBox(width: widget.brickEdgeLength / 2),
           InkWell(
@@ -259,7 +288,9 @@ class _SwitchTextState extends State<SwitchText> {
                 style: TextStyle(
                     color: hoverSecond
                         ? Color.fromARGB(255, 181, 235, 242)
-                        : !firstSelected ? Colors.red : Colors.grey[800])),
+                        : !firstSelected
+                            ? Colors.red
+                            : Colors.grey[800])),
           ),
         ],
       ),
@@ -269,8 +300,8 @@ class _SwitchTextState extends State<SwitchText> {
 
 class NintendoButton extends StatefulWidget {
   const NintendoButton({
-    @required this.brickEdgeLength,
-    @required this.playButtonTap,
+    required this.brickEdgeLength,
+    required this.playButtonTap,
   });
 
   final double brickEdgeLength;
@@ -294,7 +325,9 @@ class _NintendoButtonState extends State<NintendoButton> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(widget.brickEdgeLength / 5),
         side: BorderSide(
-          color: acceptedButtonHover ? Color.fromARGB(255, 181, 235, 242) : Colors.white,
+          color: acceptedButtonHover
+              ? Color.fromARGB(255, 181, 235, 242)
+              : Colors.white,
           width: widget.brickEdgeLength / 12,
         ),
       ),
@@ -305,7 +338,9 @@ class _NintendoButtonState extends State<NintendoButton> {
         onHover: playButtonHover,
         onTap: widget.playButtonTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: widget.brickEdgeLength / 4.5, horizontal: widget.brickEdgeLength / 2),
+          padding: EdgeInsets.symmetric(
+              vertical: widget.brickEdgeLength / 4.5,
+              horizontal: widget.brickEdgeLength / 2),
           child: Text(
             'PLAY',
             style: TextStyle(

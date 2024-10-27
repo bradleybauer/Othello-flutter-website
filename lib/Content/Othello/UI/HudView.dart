@@ -9,7 +9,11 @@ import 'Piece.dart';
 import 'PlayerInfoCard.dart';
 
 class HudView extends StatelessWidget {
-  HudView({this.game, this.brickEdgeLength, this.brickDiagonalRadius, this.quitPlayingButtonCallback});
+  HudView(
+      {required this.game,
+      required this.brickEdgeLength,
+      required this.brickDiagonalRadius,
+      required this.quitPlayingButtonCallback});
 
   static const int baseSize = 13;
 
@@ -19,31 +23,52 @@ class HudView extends StatelessWidget {
   final double brickEdgeLength;
   final double brickDiagonalRadius;
 
-  _transformCard({Widget child, double height, double width, int direction}) {
+  _transformCard(
+      {required Widget child,
+      required double height,
+      required double width,
+      required int direction}) {
     return Transform(
         origin: Offset(width / 2, height / 2),
-        transform: Matrix4.translationValues(direction * HudView.baseSize / 4 * brickEdgeLength,
-                .333 * brickDiagonalRadius / math.sqrt(2) - HudView.baseSize / 7.5 * brickEdgeLength, 0) *
+        transform: Matrix4.translationValues(
+                direction * HudView.baseSize / 4 * brickEdgeLength,
+                .333 * brickDiagonalRadius / math.sqrt(2) -
+                    HudView.baseSize / 7.5 * brickEdgeLength,
+                0) *
             Matrix4.diagonal3Values(1 / math.sqrt(2), .5 / math.sqrt(2), 1) *
             Matrix4.rotationZ(direction * math.pi / 4),
         child: child);
   }
 
-  _transformButton({Widget child, double height, double width, int direction}) {
+  _transformButton(
+      {required Widget child,
+      required double height,
+      required double width,
+      required int direction}) {
     return Transform(
         origin: Offset(width / 2, height / 2),
-        transform: Matrix4.translationValues(direction * HudView.baseSize / 3.7 * brickEdgeLength,
-                -.333 * brickDiagonalRadius / math.sqrt(2) + brickEdgeLength * .75, 0) *
+        transform: Matrix4.translationValues(
+                direction * HudView.baseSize / 3.7 * brickEdgeLength,
+                -.333 * brickDiagonalRadius / math.sqrt(2) +
+                    brickEdgeLength * .75,
+                0) *
             Matrix4.diagonal3Values(1 / math.sqrt(2), .5 / math.sqrt(2), 1) *
             Matrix4.rotationZ(-direction * math.pi / 4),
         child: child);
   }
 
-  _transformButton2({Widget child, double height, double width, int direction}) {
+  _transformButton2(
+      {required Widget child,
+      required double height,
+      required double width,
+      required int direction}) {
     return Transform(
         origin: Offset(width / 2, height / 2),
-        transform: Matrix4.translationValues(direction * HudView.baseSize / 4.2 * brickEdgeLength,
-                -.333 * brickDiagonalRadius / math.sqrt(2) + brickEdgeLength * .433, 0) *
+        transform: Matrix4.translationValues(
+                direction * HudView.baseSize / 4.2 * brickEdgeLength,
+                -.333 * brickDiagonalRadius / math.sqrt(2) +
+                    brickEdgeLength * .433,
+                0) *
             Matrix4.diagonal3Values(1 / math.sqrt(2), .5 / math.sqrt(2), 1) *
             Matrix4.rotationZ(-direction * math.pi / 4),
         child: child);
@@ -54,13 +79,23 @@ class HudView extends StatelessWidget {
     final width = brickEdgeLength * 8;
     final height = brickEdgeLength * 3;
     final containerBorderWidth = brickEdgeLength / 10;
-    final containerBorderRadius = BorderRadius.all(Radius.circular(brickDiagonalRadius / 4));
-    final containerPadding = EdgeInsets.symmetric(vertical: 0, horizontal: brickEdgeLength / 2);
+    final containerBorderRadius =
+        BorderRadius.all(Radius.circular(brickDiagonalRadius / 4));
+    final containerPadding =
+        EdgeInsets.symmetric(vertical: 0, horizontal: brickEdgeLength / 2);
 
-    final lightBorderColor = game.othello.player == Othello.WHITE ? Piece.lightShade : Colors.grey[200];
-    final darkBorderColor = game.othello.player != Othello.WHITE ? Piece.darkColor : Colors.grey[200];
-    final lightAccentColor = game.othello.player == Othello.WHITE ? Colors.lightBlueAccent : Colors.grey[200];
-    final darkAccentColor = game.othello.player != Othello.WHITE ? Colors.greenAccent : Colors.grey[200];
+    final lightBorderColor = game.othello.player == Othello.WHITE
+        ? Piece.lightShade
+        : Colors.grey[200];
+    final darkBorderColor = game.othello.player != Othello.WHITE
+        ? Piece.darkColor
+        : Colors.grey[200];
+    final lightAccentColor = game.othello.player == Othello.WHITE
+        ? Colors.lightBlueAccent
+        : Colors.grey[200];
+    final darkAccentColor = game.othello.player != Othello.WHITE
+        ? Colors.greenAccent
+        : Colors.grey[200];
 
     // A hack to make sure that accidentally hitting tab does not focus the buttons
     FocusScope.of(context).requestFocus(FocusNode());
@@ -71,11 +106,11 @@ class HudView extends StatelessWidget {
           child: PlayerInfoCard(
               width: width,
               height: height,
-              borderColor: lightBorderColor,
+              borderColor: lightBorderColor!,
               containerBorderWidth: containerBorderWidth,
               containerBorderRadius: containerBorderRadius,
               containerPadding: containerPadding,
-              accentColor: lightAccentColor,
+              accentColor: lightAccentColor!,
               brickEdgeLength: brickEdgeLength,
               player: Othello.WHITE,
               game: game,
@@ -87,11 +122,11 @@ class HudView extends StatelessWidget {
           child: PlayerInfoCard(
               width: width,
               height: height,
-              borderColor: darkBorderColor,
+              borderColor: darkBorderColor!,
               containerBorderWidth: containerBorderWidth,
               containerBorderRadius: containerBorderRadius,
               containerPadding: containerPadding,
-              accentColor: darkAccentColor,
+              accentColor: darkAccentColor!,
               brickEdgeLength: brickEdgeLength,
               player: Othello.BLACK,
               game: game),
@@ -111,8 +146,13 @@ class HudView extends StatelessWidget {
               curve: Curves.easeIn,
               duration: const Duration(seconds: 1),
               transform: Matrix4.translationValues(
-                  brickEdgeLength / 6, game.playersAreReady ? -brickEdgeLength * 2 : -brickEdgeLength * .1, 0),
-              child: MessageBox(message: 'L O A D I N G', brickEdgeLength: brickEdgeLength)),
+                  brickEdgeLength / 6,
+                  game.playersAreReady
+                      ? -brickEdgeLength * 2
+                      : -brickEdgeLength * .1,
+                  0),
+              child: MessageBox(
+                  message: 'L O A D I N G', brickEdgeLength: brickEdgeLength)),
           height: brickEdgeLength * 4,
           width: brickEdgeLength * 2,
           direction: -1),
@@ -121,7 +161,7 @@ class HudView extends StatelessWidget {
 }
 
 class MessageBox extends StatelessWidget {
-  MessageBox({this.message, this.brickEdgeLength});
+  MessageBox({required this.message, required this.brickEdgeLength});
 
   final double brickEdgeLength;
   final String message;
@@ -129,12 +169,13 @@ class MessageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: brickEdgeLength / 5, horizontal: brickEdgeLength / 2),
+      padding: EdgeInsets.symmetric(
+          vertical: brickEdgeLength / 5, horizontal: brickEdgeLength / 2),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(brickEdgeLength / 4),
           border: Border.all(
-            color: Colors.blueGrey[400],
+            color: Colors.blueGrey[400]!,
             width: brickEdgeLength / 12,
           )),
       child: Text(message,
@@ -148,8 +189,8 @@ class MessageBox extends StatelessWidget {
 
 class MyButton extends StatefulWidget {
   const MyButton({
-    @required this.brickEdgeLength,
-    @required this.playButtonTap,
+    required this.brickEdgeLength,
+    required this.playButtonTap,
   });
 
   final double brickEdgeLength;
@@ -173,7 +214,7 @@ class _MyButtonState extends State<MyButton> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(widget.brickEdgeLength / 5),
         side: BorderSide(
-          color: Colors.blueGrey[400],
+          color: Colors.blueGrey[400]!,
           width: widget.brickEdgeLength / 12,
         ),
       ),
@@ -184,7 +225,9 @@ class _MyButtonState extends State<MyButton> {
         onHover: playButtonHover,
         onTap: widget.playButtonTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: widget.brickEdgeLength / 4.5, horizontal: widget.brickEdgeLength / 2),
+          padding: EdgeInsets.symmetric(
+              vertical: widget.brickEdgeLength / 4.5,
+              horizontal: widget.brickEdgeLength / 2),
           child: Text(
             'Q U I T',
             style: TextStyle(

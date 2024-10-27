@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatefulWidget {
-  Header({this.screenWidth});
+  Header({required this.screenWidth});
   final double screenWidth;
 
   @override

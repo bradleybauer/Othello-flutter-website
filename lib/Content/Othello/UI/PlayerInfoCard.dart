@@ -7,17 +7,17 @@ import 'QValuePlot.dart';
 
 class PlayerInfoCard extends StatelessWidget {
   const PlayerInfoCard({
-    Key key,
-    @required this.width,
-    @required this.height,
-    @required this.borderColor,
-    @required this.containerBorderWidth,
-    @required this.containerBorderRadius,
-    @required this.containerPadding,
-    @required this.accentColor,
-    @required this.brickEdgeLength,
-    @required this.player,
-    @required this.game,
+    Key? key,
+    required this.width,
+    required this.height,
+    required this.borderColor,
+    required this.containerBorderWidth,
+    required this.containerBorderRadius,
+    required this.containerPadding,
+    required this.accentColor,
+    required this.brickEdgeLength,
+    required this.player,
+    required this.game,
     this.mirror = 1,
   }) : super(key: key);
 
@@ -58,15 +58,18 @@ class PlayerInfoCard extends StatelessWidget {
                 AnimatedDefaultTextStyle(
                     child: Text(mirror != 1 ? ' P1' : 'P2 '),
                     curve: Curves.easeInOut,
-                    style: TextStyle(fontSize: brickEdgeLength / 2, color: accentColor),
+                    style: TextStyle(
+                        fontSize: brickEdgeLength / 2, color: accentColor),
                     duration: const Duration(milliseconds: 750)),
                 Spacer(flex: 2),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, brickEdgeLength / 10, 0),
                   child: RotatedBox(
                     quarterTurns: (mirror == 1 ? 3 : 1),
-                    child: Text(RomanNumerals[game.othello.getScore(player)],
-                        style: TextStyle(fontSize: brickEdgeLength / 2.43, color: Colors.grey[700])),
+                    child: Text(RomanNumerals[game.othello.getScore(player)]!,
+                        style: TextStyle(
+                            fontSize: brickEdgeLength / 2.43,
+                            color: Colors.grey[700])),
                   ),
                 ),
                 Spacer(),
